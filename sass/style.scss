@@ -183,6 +183,40 @@ pre > code {
   padding: 0;
 }
 
+/* Inline `code`: click anywhere in the box to copy. The icon is a
+   pseudo-element, so it is never selectable and never part of the
+   copied text -- much like the `+` marker on highlighted code lines. */
+code.inline-copy {
+  cursor: pointer;
+}
+
+code.inline-copy::after {
+  content: "";
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-left: 0.45em;
+  vertical-align: -0.08em;
+  background-color: var(--bg-color);
+  -webkit-mask: url("/icons/copy.svg") no-repeat center / contain;
+  mask: url("/icons/copy.svg") no-repeat center / contain;
+  opacity: 0.55;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+code.inline-copy:hover::after {
+  opacity: 0.95;
+}
+
+code.inline-copy--done::after {
+  -webkit-mask-image: url("/icons/check.svg");
+  mask-image: url("/icons/check.svg");
+  opacity: 1;
+}
+
 .giallo-l {
   display: inline-block;
   min-height: 1lh;

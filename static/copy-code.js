@@ -43,8 +43,40 @@
     wrap.appendChild(btn);
   }
 
+  // Inline `code` spans: clicking anywhere in the box copies the text.
+  // Selecting text by hand is preserved -- if there's an active selection
+  // inside the element, the click is treated as a selection, not a copy.
+  function attachInline(code) {
+    if (code.dataset.inlineCopy) return;
+    if (code.closest('pre')) return; // block code is handled by attach()
+    code.dataset.inlineCopy = '1';
+    code.classList.add('inline-copy');
+    code.setAttribute('title', 'Click to copy');
+
+    code.addEventListener('click', async () => {
+      const sel = window.getSelection();
+      if (
+        sel &&
+        !sel.isCollapsed &&
+        sel.toString().trim() !== '' &&
+        sel.anchorNode &&
+        code.contains(sel.anchorNode)
+      ) {
+        return; // user is selecting part of the text -- leave them be
+      }
+      try {
+        await navigator.clipboard.writeText(code.textContent.trim());
+        code.classList.add('inline-copy--done');
+        setTimeout(() => code.classList.remove('inline-copy--done'), 1500);
+      } catch (err) {
+        /* clipboard unavailable -- nothing to do */
+      }
+    });
+  }
+
   function init() {
     document.querySelectorAll('pre').forEach(attach);
+    document.querySelectorAll('code').forEach(attachInline);
   }
 
   if (document.readyState === 'loading') {
