@@ -1,0 +1,69 @@
+<script>
+(function () {
+  window.applyTheme = function (mode) {
+    var light = mode === 'light' ||
+      (mode === 'os' && window.matchMedia('(prefers-color-scheme: light)').matches);
+    document.documentElement.className = light ? 'theme-tokyoday' : 'theme-tokyonight';
+    var d = document.getElementById('giallo-dark');
+    var l = document.getElementById('giallo-light');
+    if (d) d.media = light ? 'not all' : 'all';
+    if (l) l.media = light ? 'all' : 'not all';
+  };
+
+  function currentMode() {
+    try {
+      var saved = localStorage.getItem('theme');
+      if (saved === 'theme-tokyoday') return 'light';
+      if (saved === 'theme-tokyonight') return 'dark';
+    } catch (e) {}
+    return 'os';
+  }
+
+  window.applyTheme(currentMode());
+
+  function wire() {
+    var menu = document.querySelector('.theme-menu');
+    if (!menu) return;
+    var buttons = menu.querySelectorAll('button[data-mode]');
+
+    function refresh() {
+      var mode = currentMode();
+      buttons.forEach(function (b) {
+        b.setAttribute('aria-current', b.dataset.mode === mode ? 'true' : 'false');
+      });
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var mode = b.dataset.mode;
+        try {
+          if (mode === 'light') localStorage.setItem('theme', 'theme-tokyoday');
+          else if (mode === 'dark') localStorage.setItem('theme', 'theme-tokyonight');
+          else localStorage.removeItem('theme');
+        } catch (e) {}
+        window.applyTheme(mode);
+        refresh();
+        menu.open = false;
+      });
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!menu.contains(e.target)) menu.open = false;
+    });
+
+    try {
+      window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function () {
+        if (currentMode() === 'os') window.applyTheme('os');
+      });
+    } catch (e) {}
+
+    refresh();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wire);
+  } else {
+    wire();
+  }
+})();
+</script>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="theme-{{ config.extra.zolanight.theme | default(value="tokyonight") }}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,6 +24,9 @@
     {% else %}<link rel="canonical" href="{{ config.base_url }}" />
     {% endif %}
     <link rel="stylesheet" href="{{ get_url(path="style.css") }}">
+    <link id="giallo-dark" rel="stylesheet" href="{{ get_url(path="giallo-dark.css") }}" media="(prefers-color-scheme: dark)">
+    <link id="giallo-light" rel="stylesheet" href="{{ get_url(path="giallo-light.css") }}" media="(prefers-color-scheme: light)">
+    {% include "theme-init.html" %}
     {% if config.extra.zolanight.google_analytics_id %}
     <!-- Delayed Google Analytics loading -->
     <script>
@@ -45,7 +48,7 @@
     </script>
     {% endif %}
   </head>
-  <body class="theme-{{ config.extra.zolanight.theme | default(value="tokyonight") }}">
+  <body>
     {% set root_section = get_section(path="_index.md") %}
     <header>
       <nav>
@@ -61,6 +64,15 @@
         {% for page in root_section.pages %}
         <a href="{{ page.permalink }}">{{ page.permalink | replace(from=config.base_url, to="") }}</a>
         {% endfor %}
+
+        <details class="theme-menu">
+          <summary aria-label="Theme"></summary>
+          <div class="theme-menu__list">
+            <button type="button" data-mode="light">Light</button>
+            <button type="button" data-mode="dark">Dark</button>
+            <button type="button" data-mode="os">OS Default</button>
+          </div>
+        </details>
       </nav>
     </header>
     <hr>

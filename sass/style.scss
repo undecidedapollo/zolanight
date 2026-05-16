@@ -32,6 +32,24 @@ body {
   padding: 1em;
   background-color: var(--bg-color);
   color: var(--fg-color);
+  --surface-color: color-mix(in srgb, var(--fg-color) 6%, transparent);
+}
+
+.theme-tokyoday body {
+  --surface-color: color-mix(in srgb, white 60%, var(--bg-color));
+}
+
+.theme-tokyoday code {
+  background-color: color-mix(in srgb, var(--fg-color) 14%, var(--bg-color));
+  color: var(--fg-color);
+}
+
+.theme-tokyoday pre > code {
+  background-color: transparent;
+}
+
+.theme-tokyoday code.inline-copy::after {
+  background-color: var(--fg-color);
 }
 
 a {
@@ -126,6 +144,79 @@ nav span {
   margin: 0 0.5em; /* Add some spacing between nav links */
 }
 
+.theme-menu {
+  position: relative;
+  margin: 0 0.5em;
+}
+
+.theme-menu summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.3em;
+  border: 1px solid var(--comment-color);
+  border-radius: 4px;
+  line-height: 0;
+  opacity: 0.7;
+  transition: opacity 0.15s ease, border-color 0.15s ease;
+}
+
+.theme-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.theme-menu summary:hover,
+.theme-menu[open] summary {
+  opacity: 1;
+  border-color: var(--orange-color);
+}
+
+.theme-menu summary::before {
+  content: "";
+  display: block;
+  width: 1em;
+  height: 1em;
+  background-color: var(--orange-color);
+  -webkit-mask: url("/icons/moon.svg") no-repeat center / contain;
+  mask: url("/icons/moon.svg") no-repeat center / contain;
+}
+
+.theme-tokyoday .theme-menu summary::before {
+  -webkit-mask-image: url("/icons/sun.svg");
+  mask-image: url("/icons/sun.svg");
+}
+
+.theme-menu__list {
+  position: absolute;
+  right: 0;
+  margin-top: 0.35em;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-color);
+  border: 1px solid var(--comment-color);
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.theme-menu__list button {
+  background: transparent;
+  border: 0;
+  color: var(--fg-color);
+  font: inherit;
+  text-align: left;
+  padding: 0.4em 0.9em;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.theme-menu__list button:hover {
+  background-color: var(--surface-color);
+}
+
+.theme-menu__list button[aria-current="true"] {
+  color: var(--orange-color);
+}
+
 code {
   padding: 0px 10px;
   border-radius: 5px;
@@ -136,7 +227,7 @@ code {
 pre {
   padding: 1em;
   border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--surface-color);
   border: 1px solid var(--cyan-color);
   overflow: auto;
 }
@@ -150,7 +241,7 @@ pre {
   top: 0.5em;
   right: 0.5em;
   padding: 0.35em;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--surface-color);
   border: 1px solid var(--comment-color);
   border-radius: 4px;
   cursor: pointer;
@@ -233,12 +324,12 @@ code.inline-copy--done::after {
   opacity: 0.8;
 }
 
-.giallo-l[style*="background-color"] {
+.giallo-l.z-hl {
   position: relative;
   background-color: color-mix(in srgb, var(--green-color) 22%, transparent) !important;
 }
 
-.giallo-l[style*="background-color"]::before {
+.giallo-l.z-hl::before {
   content: "+";
   position: absolute;
   left: -0.85em;
@@ -256,7 +347,7 @@ code.inline-copy--done::after {
   margin: 1.25em 0;
   border-radius: 6px;
   border-left: 4px solid;
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: var(--surface-color);
 }
 
 .callout__icon {
@@ -320,7 +411,7 @@ blockquote {
   border-left: 4px solid var(--blue-color);
   padding: 1em;
   margin: 1em 0;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--surface-color);
 }
 
 img,
